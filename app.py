@@ -1,18 +1,28 @@
-def main():
+import streamlit as st
 
-    candidate_name = "Rahul Sharma"
+st.set_page_config(
+    page_title="HireSense AI",
+    page_icon="📄",
+    layout="wide"
+)
 
-    candidate_age = 22
+st.title("📄 HireSense AI")
 
-    experience = 1.5
+st.write("Welcome to the AI-Powered Resume Screening System!")
 
-    shortlisted = True
+st.header("Upload Resume")
 
-    print(candidate_name)
-    print(candidate_age)
-    print(experience)
-    print(shortlisted)
+uploaded_resume = st.file_uploader(
+    "Choose a Resume (PDF)",
+    type=["pdf"]
+)
 
+st.header("Upload Job Description")
 
-if __name__ == "__main__":
-    main()
+uploaded_job = st.file_uploader(
+    "Choose a Job Description (PDF or TXT)",
+    type=["pdf", "txt"]
+)
+
+if st.button("Analyze Resume"):
+    st.success("Button clicked! Analysis feature will be implemented soon.")
