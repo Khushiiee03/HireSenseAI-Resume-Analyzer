@@ -1,4 +1,5 @@
 import streamlit as st
+from modules.pdf_reader import extract_text_from_pdf
 
 st.set_page_config(
     page_title="HireSense AI",
@@ -25,4 +26,15 @@ uploaded_job = st.file_uploader(
 )
 
 if st.button("Analyze Resume"):
-    st.success("Button clicked! Analysis feature will be implemented soon.")
+
+    if uploaded_resume is not None:
+
+        resume_text = extract_text_from_pdf(uploaded_resume)
+
+        st.subheader("Extracted Resume Text")
+
+        st.write(resume_text)
+
+    else:
+
+        st.warning("Please upload a resume first.")
