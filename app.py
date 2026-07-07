@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import streamlit as st
 
+from modules.ai_analyzer import AnalysisResult, analyze_resume
 from modules.pdf_reader import (
     SUPPORTED_JOB_DESCRIPTION_TYPES,
     SUPPORTED_RESUME_TYPES,
@@ -28,7 +29,7 @@ def render_header() -> None:
     st.title("HireSense AI")
     st.subheader("AI Resume Analyzer")
     st.write(
-        "Upload a resume and job description to preview extracted text before AI analysis."
+        "Upload a resume and job description to generate ATS insights with Gemini AI."
     )
 
 
@@ -53,8 +54,23 @@ def render_extraction_result(title: str, result: ExtractionResult | None) -> Non
     st.caption(f"Extracted {len(result.text):,} characters.")
 
 
+def render_analysis_result(result: AnalysisResult | None) -> None:
+    """Render Gemini analysis output or a user-friendly error."""
+    st.markdown("### AI Resume Analysis")
+
+    if result is None:
+        st.info("Upload both files successfully, then run the analysis.")
+        return
+
+    if result.error:
+        st.error(result.error)
+        return
+
+    st.markdown(result.markdown)
+
+
 def render_upload_module() -> None:
-    """Render Phase 2 resume and job description upload workflow."""
+    """Render resume and job description upload plus AI analysis workflow."""
     resume_file = st.file_uploader(
         "Upload Resume (PDF)",
         type=sorted(SUPPORTED_RESUME_TYPES),
@@ -85,6 +101,29 @@ def render_upload_module() -> None:
 
     with job_column:
         render_extraction_result("Job Description Text", job_description_result)
+
+    can_analyze = (
+        resume_result is not None
+        and job_description_result is not None
+        and resume_result.is_successful
+        and job_description_result.is_successful
+    )
+
+    st.divider()
+
+    if not can_analyze:
+        render_analysis_result(None)
+        return
+
+    if st.button("Analyze Resume", type="primary"):
+        with st.spinner("Analyzing resume against the job description..."):
+            analysis_result = analyze_resume(
+                resume_result.text,
+                job_description_result.text,
+            )
+        render_analysis_result(analysis_result)
+    else:
+        render_analysis_result(None)
 
 
 def main() -> None:
