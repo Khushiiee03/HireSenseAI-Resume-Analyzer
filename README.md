@@ -1,16 +1,20 @@
 # HireSense AI
 
-HireSense AI is an AI-powered Resume Screening and ATS Analysis web application. It will help recruiters and job seekers compare resumes against job descriptions, generate ATS insights, and provide AI-powered hiring recommendations using Google's Gemini AI.
+HireSense AI is an AI-powered Resume Screening and ATS Analysis web application. It helps recruiters and job seekers compare resumes against job descriptions, generate ATS insights, and provide AI-powered hiring recommendations using Google's Gemini AI.
 
-## Phase 1 Status
+## Phase 2 Status
 
-This phase creates the project foundation:
+This phase adds the upload and text extraction workflow:
 
-- Streamlit application entry point
-- Production-oriented folder structure
-- Dependency manifest
-- Environment variable example
-- Git-ready project files
+- Resume PDF upload
+- Job description PDF or TXT upload
+- PyMuPDF-based PDF text extraction
+- TXT text extraction with common encoding support
+- Extracted resume preview
+- Extracted job description preview
+- Graceful handling for empty, invalid, scanned, or unsupported files
+
+AI analysis is intentionally not included yet.
 
 ## Tech Stack
 
@@ -26,15 +30,20 @@ This phase creates the project foundation:
 
 ```text
 HireSense_Ai/
-├── app.py
-├── requirements.txt
-├── README.md
-├── .env.example
-├── .gitignore
-├── assets/
-├── modules/
-├── output/
-└── resumes/
++-- app.py
++-- requirements.txt
++-- README.md
++-- .env.example
++-- .gitignore
++-- assets/
+|   +-- .gitkeep
++-- modules/
+|   +-- __init__.py
+|   +-- pdf_reader.py
++-- output/
+|   +-- .gitkeep
++-- resumes/
+    +-- .gitkeep
 ```
 
 ## Setup
@@ -70,17 +79,21 @@ HireSense_Ai/
    python -m streamlit run app.py
    ```
 
+## Current Workflow
+
+1. Upload a resume as a PDF.
+2. Upload a job description as a PDF or TXT file.
+3. Review the extracted text previews.
+4. Fix invalid, empty, scanned, or unsupported files before continuing to later phases.
+
 ## Environment Variables
 
 | Variable | Description |
 | --- | --- |
-| `GOOGLE_API_KEY` | Google Gemini API key used by the `google-genai` SDK. |
+| `GOOGLE_API_KEY` | Google Gemini API key used by the `google-genai` SDK in later AI analysis phases. |
 
 ## Roadmap
 
-- Resume PDF upload
-- Job description PDF/TXT upload
-- Text extraction
 - Gemini-powered resume and job description comparison
 - ATS score generation
 - Matching and missing skills analysis
